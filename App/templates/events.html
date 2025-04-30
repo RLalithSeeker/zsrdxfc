@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - UNISEN{% endblock %}
+
+{% block content %}
+<div class="events-container">
+    <h1 class="page-title">Events</h1>
+    
+    <div class="events-tabs">
+        <button class="tab-button active" data-tab="upcoming">Upcoming Events</button>
+        <button class="tab-button" data-tab="past">Past Events</button>
+    </div>
+    
+    <div class="tab-content" id="upcomingTab">
+        {% if upcoming_events %}
+            <div class="events-grid">
+                {% for event in upcoming_events %}
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-month">{{ event.date.strftime('%b') }}</span>
+                            <span class="event-day">{{ event.date.strftime('%d') }}</span>
+                        </div>
+                        <div class="event-details">
+                            <h3 class="event-title">{{ event.title }}</h3>
+                            <p class="event-location">{{ event.location }}</p>
+                            <p class="event-time">{{ event.date.strftime('%I:%M %p') }}</p>
+                            <a href="{{ url_for('event_details', event_id=event.id) }}" class="btn btn-sm btn-outline">View Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No upcoming events at this time.</p>
+        {% endif %}
+    </div>
+    
+    <div class="tab-content hidden" id="pastTab">
+        {% if past_events %}
+            <div class="events-grid">
+                {% for event in past_events %}
+                    <div class="event-card past">
+                        <div class="event-date">
+                            <span class="event-month">{{ event.date.strftime('%b') }}</span>
+                            <span class="event-day">{{ event.date.strftime('%d') }}</span>
+                        </div>
+                        <div class="event-details">
+                            <h3 class="event-title">{{ event.title }}</h3>
+                            <p class="event-location">{{ event.location }}</p>
+                            <p class="event-time">{{ event.date.strftime('%I:%M %p') }}</p>
+                            <a href="{{ url_for('event_details', event_id=event.id) }}" class="btn btn-sm btn-outline">View Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No past events to display.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and hide all contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.add('hidden'));
+                
+                // Add active class to clicked button and show corresponding content
+                this.classList.add('active');
+                document.getElementById(tabId + 'Tab').classList.remove('hidden');
+            });
+        });
+    });
+</script>
+{% endblock %}

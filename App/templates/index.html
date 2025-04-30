@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - UNISEN{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1 class="page-title">Dashboard</h1>
+    
+    <div class="dashboard-grid">
+        <section class="card announcements-card">
+            <h2 class="card-title">Important Announcements</h2>
+            
+            {% if announcements %}
+                <div class="announcements-list">
+                    {% for announcement in announcements %}
+                        <div class="announcement-item {% if announcement.is_urgent %}urgent{% endif %}">
+                            <h3 class="announcement-title">{{ announcement.title }}</h3>
+                            <p class="announcement-content">{{ announcement.content }}</p>
+                            <div class="announcement-meta">
+                                <span class="announcement-date">{{ announcement.timestamp.strftime('%b %d, %Y') }}</span>
+                                {% if announcement.club %}
+                                    <span class="announcement-source">{{ announcement.club.name }}</span>
+                                {% endif %}
+                                {% if announcement.is_urgent %}
+                                    <span class="badge badge-urgent">Urgent</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">No announcements at this time.</p>
+            {% endif %}
+        </section>
+        
+        <section class="card events-card">
+            <h2 class="card-title">Upcoming Events</h2>
+            
+            {% if upcoming_events %}
+                <div class="events-list">
+                    {% for event in upcoming_events %}
+                        <div class="event-item">
+                            <div class="event-date">
+                                <span class="event-month">{{ event.start_time.strftime('%b') }}</span>
+                                <span class="event-day">{{ event.start_time.strftime('%d') }}</span>
+                            </div>
+                            <div class="event-details">
+                                <h3 class="event-title">{{ event.title }}</h3>
+                                <p class="event-location">{{ event.location }}</p>
+                                <p class="event-time">{{ event.start_time.strftime('%I:%M %p') }} - {{ event.end_time.strftime('%I:%M %p') }}</p>
+                                <a href="{{ url_for('event_details', event_id=event.id) }}" class="btn btn-sm btn-outline">View Details</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="{{ url_for('events') }}" class="btn btn-link">View All Events</a>
+            {% else %}
+                <p class="empty-state">No upcoming events at this time.</p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

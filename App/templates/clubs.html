@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Clubs - UNISEN{% endblock %}
+
+{% block content %}
+<div class="clubs-container">
+    <h1 class="page-title">University Clubs</h1>
+    
+    {% if clubs %}
+        <div class="clubs-grid">
+            {% for club in clubs %}
+                <div class="club-card">
+                    <div class="club-header">
+                        <h3 class="club-name">{{ club.name }}</h3>
+                    </div>
+                    <div class="club-content">
+                        <p class="club-description">{{ club.description }}</p>
+                        <div class="club-actions">
+                            <a href="#" class="btn btn-primary">Join Club</a>
+                            <a href="#" class="btn btn-outline">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No clubs available at this time.</p>
+    {% endif %}
+</div>
+{% endblock %}

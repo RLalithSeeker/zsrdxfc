@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages - UNISEN{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact.user.id) }}" class="contact-item {% if request.path == url_for('chat', contact_id=contact.user.id) %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact.user.name }}</h3>
+                        <p class="contact-id">{{ contact.user.student_id }}</p>
+                        {% if contact.last_message %}
+                            <p class="contact-last-message">{{ contact.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact.last_message %}
+                            <span class="contact-time">{{ contact.last_message.timestamp.strftime('%H:%M') if contact.last_message.timestamp.date() == today else contact.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact.unread_count > 0 %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <p class="select-chat-message">Select a chat to start messaging</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% if upcoming_events %}
+    <div class="events-grid">
+        {% for event in upcoming_events %}
+            ...
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty-state">No upcoming events at this time.</p>
+{% endif %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Conversation with {{ recipient.name }} - UNISEN{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <div class="messages-layout">
+        <div class="contacts-sidebar">
+            <div class="search-container">
+                <input type="text" id="contactSearch" class="search-input" placeholder="Search contacts...">
+            </div>
+            
+            <div class="contacts-list">
+                {% for user in users %}
+                    <a href="{{ url_for('conversation', recipient_id=user.id) }}" class="contact-item {% if user.id == recipient.id %}active{% endif %}">
+                        <div class="contact-avatar">
+                            <img src="{{ url_for('static', filename='img/' + user.profile_pic) }}" alt="{{ user.name }}">
+                        </div>
+                        <div class="contact-info">
+                            <h3 class="contact-name">{{ user.name }}</h3>
+                            <p class="contact-id">{{ user.student_id }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="conversation">
+            <div class="conversation-header">
+                <h2 class="recipient-name">{{ recipient.name }}</h2>
+            </div>
+            
+            <div class="messages-list" id="messagesList">
+                {% for message in messages %}
+                    <div class="message-item {% if message.sender_id == session['user_id'] %}sent{% else %}received{% endif %}">
+                        <div class="message-content">
+                            {{ message.content }}
+                        </div>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%I:%M %p') }}</span>
+                            {% if message.sender_id == session['user_id'] %}
+                                <span class="message-status {% if message.read %}read{% else %}sent{% endif %}"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <form class="message-form" method="POST">
+                <input type="text" name="message" class="message-input" placeholder="Type a message..." required>
+                <button type="submit" class="btn btn-primary send-button">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Scroll to bottom of messages list
+    const messagesList = document.getElementById('messagesList');
+    messagesList.scrollTop = messagesList.scrollHeight;
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,1225 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - UNISEN{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
+        <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+        <button type="submit" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+        </button>
+    </form>
+</div>
+{% endblock %}
+<div class="messages-container">
+    <div class="contacts-sidebar">
+        <div class="search-container">
+            <input type="text" placeholder="Search contacts..." class="search-input">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        
+        <div class="contacts-list">
+            {% for contact_item in contacts %}
+                <a href="{{ url_for('chat', contact_id=contact_item.user.id) }}" class="contact-item {% if contact_item.user.id == contact.id %}active{% endif %}">
+                    <div class="contact-info">
+                        <h3 class="contact-name">{{ contact_item.user.name }}</h3>
+                        <p class="contact-id">{{ contact_item.user.student_id }}</p>
+                        {% if contact_item.last_message %}
+                            <p class="contact-last-message">{{ contact_item.last_message.content }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="contact-meta">
+                        {% if contact_item.last_message %}
+                            <span class="contact-time">{{ contact_item.last_message.timestamp.strftime('%H:%M') if contact_item.last_message.timestamp.date() == today else contact_item.last_message.timestamp.strftime('%Y-%m-%d') }}</span>
+                        {% endif %}
+                        {% if contact_item.unread_count > 0 and contact_item.user.id != contact.id %}
+                            <span class="unread-badge"></span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-state">No contacts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2 class="chat-title">{{ contact.name }}</h2>
+        </div>
+        
+        <div class="messages-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}message-sent{% else %}message-received{% endif %}">
+                    <div class="message-content">
+                        <p>{{ message.content }}</p>
+                        <div class="message-meta">
+                            <span class="message-time">{{ message.timestamp.strftime('%H:%M') }}</span>
+                            {% if message.sender_id == session.user_id %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="message-status-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-state">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+        
+        <form method="POST" class="message-form">
+            <input type="text" name="message" placeholder="Type a message..." class="message-input" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ contact.name }} - University Student Network{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="contact-name">{{ contact.name }}</h2>
+        <p class="contact-info">{{ contact.major }} | {{ contact.year }}</p>
+    </div>
+    
+    <div class="messages-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.sender_id == session.user_id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">{{ message.content }}</div>
+                    <div class="message-time">{{ message.timestamp.strftime('%I:%M %p | %b %d') }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+    
+    <form method="POST" class="message-form">
